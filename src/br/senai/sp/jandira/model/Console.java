@@ -7,8 +7,19 @@ public enum Console {
 	XBOX_ONE("Xbox One", 2013),
 	SWITCH("Nintendo Switch", 2017);
 	
+	private String name;
+	private int releaseYear;
+	
 	private Console(String name, int releaseYear) {
-		
+		this.name = name;
+		this.releaseYear = releaseYear;
 	}
-
+	
+	public String getName() {
+		return name;
+	}
+	
+	public int getReleaseYear() {
+		return releaseYear;
+	}
 }
