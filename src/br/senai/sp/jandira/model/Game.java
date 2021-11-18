@@ -73,7 +73,7 @@ public class Game {
 	}
 	
 	public void setEstimatedPrice(String estimatedPrice) {
-		this.estimatedPrice = Integer.parseInt(estimatedPrice);
+		this.estimatedPrice = Double.parseDouble(estimatedPrice);
 	}
 
 	// Behaviors
