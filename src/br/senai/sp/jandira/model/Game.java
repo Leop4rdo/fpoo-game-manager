@@ -11,7 +11,9 @@ public class Game {
 	private double estimatedPrice;
 	
 	
-	// Constructor
+	// Constructors
+	public Game() {}
+	
 	public Game(String title, String observations, Developer developer, Console console, boolean finished, double estimatedPrice) {
 		this.title = title;
 		this.observations = observations;
@@ -43,7 +45,7 @@ public class Game {
 	}
 	
 	public void setDeveloper(Developer developer) {
-		developer = developer;
+		this.developer = developer;
 	}
 	
 	public Console getConsole() {
@@ -68,6 +70,10 @@ public class Game {
 	
 	public void setEstimatedPrice(double estimatedPrice) {
 		this.estimatedPrice = estimatedPrice;
+	}
+	
+	public void setEstimatedPrice(String estimatedPrice) {
+		this.estimatedPrice = Integer.parseInt(estimatedPrice);
 	}
 
 	// Behaviors

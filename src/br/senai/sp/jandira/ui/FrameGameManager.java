@@ -14,19 +14,35 @@ import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.DefaultComboBoxModel;
+import br.senai.sp.jandira.model.Console;
+import br.senai.sp.jandira.model.Developer;
+import br.senai.sp.jandira.model.Game;
+import br.senai.sp.jandira.repository.DeveloperRepository;
+import br.senai.sp.jandira.repository.GameRepository;
 
 public class FrameGameManager extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtTitle;
 	private JTextField txtestimatedPrice;
+	private GameRepository games;
+	private DeveloperRepository devs;
 	
 	/**
 	 * Create the frame.
 	 */
 	public FrameGameManager() {
+		devs = new DeveloperRepository();
+		games = new GameRepository();
+		
+		
+		
 		setTitle("Game Manager");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,6 +76,13 @@ public class FrameGameManager extends JFrame {
 		lblDeveloper.setFont(new Font("Verdana", Font.PLAIN, 16));
 		
 		JComboBox comboDeveloper = new JComboBox();
+		DefaultComboBoxModel<String> modelDeveloper = new DefaultComboBoxModel<String>();
+		
+		for (Developer d : devs.getDeveloperList()) {
+			modelDeveloper.addElement(d.getName());
+		}
+		
+		comboDeveloper.setModel(modelDeveloper);
 		comboDeveloper.setBounds(141, 44, 200, 30);
 		formPanel.add(comboDeveloper);
 		comboDeveloper.setFont(new Font("Verdana", Font.PLAIN, 16));
@@ -70,6 +93,14 @@ public class FrameGameManager extends JFrame {
 		lblConsole.setFont(new Font("Verdana", Font.PLAIN, 16));
 		
 		JComboBox comboConsole = new JComboBox();
+		DefaultComboBoxModel<String> modelConsole = new DefaultComboBoxModel<String>();
+		
+		for (Console c : Console.values()) {
+			modelConsole.addElement(c.getName());
+		}
+		
+		
+		comboConsole.setModel(modelConsole);
 		comboConsole.setBounds(141, 85, 200, 30);
 		formPanel.add(comboConsole);
 		comboConsole.setFont(new Font("Verdana", Font.PLAIN, 16));
@@ -100,12 +131,12 @@ public class FrameGameManager extends JFrame {
 		btnSave.setBounds(0, 301, 341, 40);
 		formPanel.add(btnSave);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setLineWrap(true);
-		textArea.setFont(new Font("Verdana", Font.PLAIN, 16));
-		textArea.setTabSize(4);
-		textArea.setBounds(141, 167, 200, 120);
-		formPanel.add(textArea);
+		JTextArea txtAreaObservations = new JTextArea();
+		txtAreaObservations.setLineWrap(true);
+		txtAreaObservations.setFont(new Font("Verdana", Font.PLAIN, 16));
+		txtAreaObservations.setTabSize(4);
+		txtAreaObservations.setBounds(141, 167, 200, 120);
+		formPanel.add(txtAreaObservations);
 		
 		JPanel listPanel = new JPanel();
 		listPanel.setBackground(new Color(248, 248, 252));
@@ -132,5 +163,27 @@ public class FrameGameManager extends JFrame {
 		JButton btnPrevious_1 = new JButton(">");
 		btnPrevious_1.setBounds(154, 301, 50, 40);
 		listPanel.add(btnPrevious_1);
+		
+				
+		btnSave.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Game g = new Game();
+				
+				g.setTitle(txtTitle.getText());
+				g.setDeveloper(devs.getDeveloperList()[comboDeveloper.getSelectedIndex()]);
+				g.setConsole(Console.values()[comboConsole.getSelectedIndex()]);
+				g.setEstimatedPrice(txtestimatedPrice.getText());
+				g.setFinished(checkFinished.isSelected());
+				g.setObservations(txtAreaObservations.getText());
+				
+				System.out.println(g.toString());
+			}
+		});
+		
+		
+		
+		
 	}
 }

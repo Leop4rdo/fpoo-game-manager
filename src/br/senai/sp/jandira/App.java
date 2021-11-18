@@ -1,14 +1,10 @@
 package br.senai.sp.jandira;
 
-import br.senai.sp.jandira.model.Console;
-import br.senai.sp.jandira.model.Developer;
-import br.senai.sp.jandira.model.Game;
-import br.senai.sp.jandira.repository.DeveloperRepository;
-import br.senai.sp.jandira.repository.GameRepository;
+import br.senai.sp.jandira.ui.FrameGameManager;
 
 public class App {
 	
 	public static void main(String[] args) {
-		
-	}
+		new FrameGameManager().setVisible(true);
+;	}
 }

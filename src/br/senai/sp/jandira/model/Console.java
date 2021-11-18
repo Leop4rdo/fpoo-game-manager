@@ -5,7 +5,8 @@ public enum Console {
 	XBOX_SERIES_X("Xbox series X", 2020),
 	PS4("Playstation 4", 2013),
 	XBOX_ONE("Xbox One", 2013),
-	SWITCH("Nintendo Switch", 2017);
+	SWITCH("Nintendo Switch", 2017),
+	PC("PC", 1974);
 	
 	private String name;
 	private int releaseYear;
