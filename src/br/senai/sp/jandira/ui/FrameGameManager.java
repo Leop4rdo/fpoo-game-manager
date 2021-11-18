@@ -6,6 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -18,9 +21,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+
 import br.senai.sp.jandira.model.Console;
 import br.senai.sp.jandira.model.Developer;
 import br.senai.sp.jandira.model.Game;
@@ -30,7 +36,7 @@ import br.senai.sp.jandira.repository.GameRepository;
 public class FrameGameManager extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtTitle;
-	private JTextField txtestimatedPrice;
+	private JTextField txtEstimatedPrice;
 	private GameRepository games;
 	private DeveloperRepository devs;
 	
@@ -46,7 +52,7 @@ public class FrameGameManager extends JFrame {
 		setTitle("Game Manager");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 460);
+		setBounds(100, 100, 710, 460);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(248, 248, 252));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -110,11 +116,11 @@ public class FrameGameManager extends JFrame {
 		formPanel.add(lblestimatedPrice);
 		lblestimatedPrice.setFont(new Font("Verdana", Font.PLAIN, 16));
 		
-		txtestimatedPrice = new JTextField();
-		txtestimatedPrice.setBounds(141, 126, 112, 30);
-		formPanel.add(txtestimatedPrice);
-		txtestimatedPrice.setFont(new Font("Verdana", Font.PLAIN, 16));
-		txtestimatedPrice.setColumns(10);
+		txtEstimatedPrice = new JTextField();
+		txtEstimatedPrice.setBounds(141, 126, 112, 30);
+		formPanel.add(txtEstimatedPrice);
+		txtEstimatedPrice.setFont(new Font("Verdana", Font.PLAIN, 16));
+		txtEstimatedPrice.setColumns(10);
 		
 		JCheckBox checkFinished = new JCheckBox("Zerado");
 		checkFinished.setBounds(259, 126, 82, 30);
@@ -149,41 +155,88 @@ public class FrameGameManager extends JFrame {
 		listPanel.add(lblJogos);
 		lblJogos.setFont(new Font("Verdana", Font.PLAIN, 16));
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 21, 300, 268);
-		listPanel.add(scrollPane);
+		JScrollPane listScrollPane = new JScrollPane();
+		listScrollPane.setBounds(0, 21, 300, 268);
+		listPanel.add(listScrollPane);
 		
-		JList list = new JList();
-		scrollPane.setViewportView(list);
+		JList gameList = new JList();
+		gameList.setFont(new Font("Verdana", Font.PLAIN, 16));
+		DefaultListModel<String> modelGame = new DefaultListModel<String>();
+		gameList.setModel(modelGame);
+		listScrollPane.setViewportView(gameList);
 		
 		JButton btnPrevious = new JButton("<");
+		btnPrevious.setFont(new Font("Verdana", Font.PLAIN, 16));
 		btnPrevious.setBounds(94, 301, 50, 40);
 		listPanel.add(btnPrevious);
 		
-		JButton btnPrevious_1 = new JButton(">");
-		btnPrevious_1.setBounds(154, 301, 50, 40);
-		listPanel.add(btnPrevious_1);
+		JButton btnNext = new JButton(">");
+		btnNext.setFont(new Font("Verdana", Font.PLAIN, 16));
+		btnNext.setBounds(154, 301, 50, 40);
+		listPanel.add(btnNext);
 		
 				
 		btnSave.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Game g = new Game();
-				
-				g.setTitle(txtTitle.getText());
-				g.setDeveloper(devs.getDeveloperList()[comboDeveloper.getSelectedIndex()]);
-				g.setConsole(Console.values()[comboConsole.getSelectedIndex()]);
-				g.setEstimatedPrice(txtestimatedPrice.getText());
-				g.setFinished(checkFinished.isSelected());
-				g.setObservations(txtAreaObservations.getText());
-				
-				System.out.println(g.toString());
+				if (!txtTitle.getText().equals("") && !txtEstimatedPrice.getText().equals("")) {
+					Game g = new Game();
+					
+					g.setTitle(txtTitle.getText());
+					g.setDeveloper(devs.getDeveloperList()[comboDeveloper.getSelectedIndex()]);
+					g.setConsole(Console.values()[comboConsole.getSelectedIndex()]);
+					g.setEstimatedPrice(txtEstimatedPrice.getText());
+					g.setFinished(checkFinished.isSelected());
+					g.setObservations(txtAreaObservations.getText());
+					
+					games.addGame(g);
+					modelGame.addElement(g.getTitle());
+				} else {
+					JOptionPane.showMessageDialog(null, "Por favor preencha o formulario!", "Por favor preencha o formulario!",
+										JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
+		gameList.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				Game g = games.getGame(gameList.getSelectedIndex());
+				txtTitle.setText(g.getTitle());
+				comboDeveloper.setSelectedIndex(devs.getIndexOf(g.getDeveloper()));
+				comboConsole.setSelectedIndex(g.getConsole().ordinal());
+				txtEstimatedPrice.setText(String.valueOf(g.getEstimatedPrice()));
+				checkFinished.setSelected(g.isFinished());
+				txtAreaObservations.setText(g.getObservations());
+			}
+		});
 		
+		btnPrevious.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (gameList.getSelectedIndex() > 0) {
+					int previousIndex = gameList.getSelectedIndex() - 1;
+					gameList.setSelectedIndex(previousIndex);
+				} else {
+					gameList.setSelectedIndex(gameList.getLastVisibleIndex());
+				}
+			}
+		});
 		
+		btnNext.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (gameList.getSelectedIndex() < gameList.getLastVisibleIndex()) {
+					int previousIndex = gameList.getSelectedIndex() + 1;
+					gameList.setSelectedIndex(previousIndex);
+				} else {
+					gameList.setSelectedIndex(0);
+				}
+			}
+		});
 		
 	}
 }

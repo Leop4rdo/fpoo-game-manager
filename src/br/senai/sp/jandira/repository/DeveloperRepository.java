@@ -37,4 +37,14 @@ public class DeveloperRepository {
 		}
 		return null;
 	}
+	
+	public int getIndexOf(Developer developer) {
+		for (int i = 0; i < developerList.length; i++) {
+			if (developerList[i].equals(developer)) {
+				return i;
+			}
+		}
+		
+		return 0;
+	}
 }

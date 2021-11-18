@@ -15,7 +15,7 @@ public class GameRepository {
 		return gameList;
 	}
 	
-	public Game getGameFromIndex(int index) {
+	public Game getGame(int index) {
 		return gameList.get(index);
 	}
 	
