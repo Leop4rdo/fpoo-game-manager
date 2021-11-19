@@ -136,7 +136,7 @@ public class FrameGameManager extends JFrame {
 		lblObservations.setFont(new Font("Verdana", Font.PLAIN, 16));
 		
 		JButton btnSave = new JButton("Salvar");
-		btnSave.setBounds(0, 301, 341, 40);
+		btnSave.setBounds(0, 301, 150, 40);
 		formPanel.add(btnSave);
 		
 		JTextArea txtAreaObservations = new JTextArea();
@@ -145,6 +145,10 @@ public class FrameGameManager extends JFrame {
 		txtAreaObservations.setTabSize(4);
 		txtAreaObservations.setBounds(141, 167, 200, 120);
 		formPanel.add(txtAreaObservations);
+		
+		JButton btnDelete = new JButton("Deletar");
+		btnDelete.setBounds(180, 301, 160, 40);
+		formPanel.add(btnDelete);
 		
 		JPanel listPanel = new JPanel();
 		listPanel.setBackground(new Color(248, 248, 252));
@@ -201,16 +205,29 @@ public class FrameGameManager extends JFrame {
 			}
 		});
 		
+		btnDelete.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!gameList.isSelectionEmpty()) {
+					games.removeGame(gameList.getSelectedIndex());
+					modelGame.remove(gameList.getSelectedIndex());
+				}
+			}
+		});
+		
 		gameList.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				Game g = games.getGame(gameList.getSelectedIndex());
-				txtTitle.setText(g.getTitle());
-				comboDeveloper.setSelectedIndex(devs.getIndexOf(g.getDeveloper()));
-				comboConsole.setSelectedIndex(g.getConsole().ordinal());
-				txtEstimatedPrice.setText(String.valueOf(g.getEstimatedPrice()));
-				checkFinished.setSelected(g.isFinished());
-				txtAreaObservations.setText(g.getObservations());
+				try {
+					Game g = games.getGame(gameList.getSelectedIndex());
+					txtTitle.setText(g.getTitle());
+					comboDeveloper.setSelectedIndex(devs.getIndexOf(g.getDeveloper()));
+					comboConsole.setSelectedIndex(g.getConsole().ordinal());
+					txtEstimatedPrice.setText(String.valueOf(g.getEstimatedPrice()));
+					checkFinished.setSelected(g.isFinished());
+					txtAreaObservations.setText(g.getObservations());
+				} catch (Exception exception) {}
 			}
 		});
 		

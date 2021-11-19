@@ -22,4 +22,8 @@ public class GameRepository {
 	public void addGame(Game g) {
 		gameList.add(g);
 	}
+	
+	public void removeGame(int index) {
+		gameList.remove(index);
+	}
 }
