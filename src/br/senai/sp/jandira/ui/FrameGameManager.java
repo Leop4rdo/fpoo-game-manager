@@ -30,6 +30,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 
 import br.senai.sp.jandira.model.Console;
+import br.senai.sp.jandira.model.DevListChangeListener;
 import br.senai.sp.jandira.model.Developer;
 import br.senai.sp.jandira.model.Game;
 import br.senai.sp.jandira.repository.DeveloperRepository;
@@ -48,8 +49,6 @@ public class FrameGameManager extends JFrame {
 	public FrameGameManager() {
 		devs = new DeveloperRepository();
 		games = new GameRepository();
-		
-		
 		
 		setTitle("Game Manager");
 		setResizable(false);
@@ -181,6 +180,17 @@ public class FrameGameManager extends JFrame {
 		btnNext.setBounds(154, 301, 50, 40);
 		listPanel.add(btnNext);
 		
+		
+		devs.addChangeListener(new DevListChangeListener() {
+			
+			@Override
+			public void changePerformed() {
+				modelDeveloper.removeAllElements();
+				for (Console c : Console.values()) {
+					modelConsole.addElement(c.getName());
+				}
+			}
+		});
 				
 		btnSave.addActionListener(new ActionListener() {
 			
@@ -190,7 +200,7 @@ public class FrameGameManager extends JFrame {
 					Game g = new Game();
 					
 					g.setTitle(txtTitle.getText());
-					g.setDeveloper(devs.getDeveloperList()[comboDeveloper.getSelectedIndex()]);
+					g.setDeveloper(devs.getDeveloperList().get(comboDeveloper.getSelectedIndex()));
 					g.setConsole(Console.values()[comboConsole.getSelectedIndex()]);
 					g.setEstimatedPrice(txtEstimatedPrice.getText());
 					g.setFinished(checkFinished.isSelected());
@@ -198,6 +208,10 @@ public class FrameGameManager extends JFrame {
 					
 					games.addGame(g);
 					modelGame.addElement(g.getTitle());
+					
+					txtAreaObservations.setText("");
+					txtEstimatedPrice.setText("");
+					txtTitle.setText("");
 				} else {
 					JOptionPane.showMessageDialog(null, "Por favor preencha o formulario!", "Por favor preencha o formulario!",
 										JOptionPane.ERROR_MESSAGE);
