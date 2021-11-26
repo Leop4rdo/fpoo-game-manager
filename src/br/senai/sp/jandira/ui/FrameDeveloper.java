@@ -29,10 +29,11 @@ public class FrameDeveloper extends JFrame {
 	 * Create the frame.
 	 */
 	public FrameDeveloper(DeveloperRepository devs) {
+		setResizable(false);
 		this.devs = devs;
 		
 		setTitle("Novo Desenvolvedor");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 501, 320);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -73,8 +74,11 @@ public class FrameDeveloper extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Developer dev = new Developer(txtName.getText(), Integer.parseInt(txtReleaseYear.getText()));
-				
 				devs.addDeveloper(dev);
+				
+				txtName.setText("");
+				txtReleaseYear.setText("");
+				setVisible(false);
 			}
 		});
 	}

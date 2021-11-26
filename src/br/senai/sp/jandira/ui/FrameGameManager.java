@@ -42,6 +42,7 @@ public class FrameGameManager extends JFrame {
 	private JTextField txtEstimatedPrice;
 	private GameRepository games;
 	private DeveloperRepository devs;
+	private FrameDeveloper frameDev;
 	
 	/**
 	 * Create the frame.
@@ -50,10 +51,12 @@ public class FrameGameManager extends JFrame {
 		devs = new DeveloperRepository();
 		games = new GameRepository();
 		
+		frameDev = new FrameDeveloper(devs);
+		
 		setTitle("Game Manager");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 710, 460);
+		setBounds(100, 100, 710, 480);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(248, 248, 252));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -180,14 +183,26 @@ public class FrameGameManager extends JFrame {
 		btnNext.setBounds(154, 301, 50, 40);
 		listPanel.add(btnNext);
 		
+		JButton btnNewDeveloper = new JButton("Novo Desenvolvedor");
+		btnNewDeveloper.setFont(new Font("Verdana", Font.PLAIN, 16));
+		btnNewDeveloper.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frameDev.setVisible(!frameDev.isVisible());
+			}
+		});
+		btnNewDeveloper.setBounds(224, 386, 250, 40);
+		contentPane.add(btnNewDeveloper);
+		
+		
+		
 		
 		devs.addChangeListener(new DevListChangeListener() {
 			
 			@Override
 			public void changePerformed() {
 				modelDeveloper.removeAllElements();
-				for (Console c : Console.values()) {
-					modelConsole.addElement(c.getName());
+				for (Developer d : devs.getDeveloperList()) {
+					modelDeveloper.addElement(d.getName());
 				}
 			}
 		});
